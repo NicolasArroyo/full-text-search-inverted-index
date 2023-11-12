@@ -243,12 +243,11 @@ def search_query_automatic_blocks(query, blocks_directory, stemmer, stop_list, n
 
 
 # Directorio para guardar los bloques
-blocks_directory = 'blocks'  # Asegúrate de cambiar esto a tu directorio deseado
+blocks_directory = 'blocks'
 os.makedirs(blocks_directory, exist_ok=True)
 
-# Aquí debes tener tu objeto de índice invertido inicial 'my_index'
 my_index = InvIndex()
-my_index.index_docs(["libro1.txt", "libro2.txt", "libro3.txt", "libro4.txt", "libro5.txt", "libro6.txt", "libro7.txt"])
+my_index.index_docs(["libro1.txt", "libro2.txt", "libro3.txt", "libro4.txt", "libro5.txt", "libro6.txt"])
 
 # Dividir y guardar los bloques
 num_blocks = divide_and_save_blocks(my_index, BLOCK_SIZE, blocks_directory)
