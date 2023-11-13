@@ -129,23 +129,40 @@ def divide_and_save_blocks(index, block_size, directory):
     return block_count + 1
 
 
-def sequential_merge_blocks(num_blocks, directory):
+def merge_and_save_blocks(input_directory, output_directory, block_size):
     """
-    Realiza una fusión secuencial de los bloques, cargando uno a la vez, para cumplir con las restricciones de memoria.
+    Fusiona los bloques en 'input_directory' y guarda los bloques fusionados en 'output_directory'.
     """
-    merged_index = defaultdict(list)
+    # Crea el directorio de salida si no existe
+    os.makedirs(output_directory, exist_ok=True)
 
-    for block_idx in range(num_blocks):
-        with open(os.path.join(directory, f"block_{block_idx}.json"), 'r', encoding='utf-8') as file:
-            block_data = json.load(file)
-            for token, postings in block_data.items():
-                merged_index[token].extend(postings)
+    block_files = [f for f in os.listdir(input_directory) if f.startswith("block_") and f.endswith(".json")]
+    merged_blocks = defaultdict(list)
+    current_block_size = 0
+    current_block_count = 0
 
-    # Ordenar las listas de postings para cada token
-    for token, postings in merged_index.items():
-        merged_index[token] = sorted(postings, key=lambda x: x[0])  # Ordenar por índice de documento
+    for block_file in block_files:
+        with open(os.path.join(input_directory, block_file), 'r', encoding='utf-8') as file:
+            block = json.load(file)
+            for token, postings in block.items():
+                entry = json.dumps({token: postings})
+                entry_size = len(entry.encode('utf-8'))
+                if current_block_size + entry_size > block_size:
+                    # Guardar el bloque actual y empezar uno nuevo
+                    with open(os.path.join(output_directory, f"merged_block_{current_block_count}.json"), 'w',
+                              encoding='utf-8') as out_file:
+                        json.dump(merged_blocks, out_file, ensure_ascii=False)
+                    current_block_count += 1
+                    merged_blocks = defaultdict(list)
+                    current_block_size = 0
+                merged_blocks[token].extend(postings)
+                current_block_size += entry_size
 
-    return merged_index
+    # Guardar el último bloque si contiene datos
+    if merged_blocks:
+        with open(os.path.join(output_directory, f"merged_block_{current_block_count}.json"), 'w',
+                  encoding='utf-8') as out_file:
+            json.dump(merged_blocks, out_file, ensure_ascii=False)
 
 
 def reconstruct_index_from_blocks(num_blocks, directory):
@@ -242,6 +259,37 @@ def search_query_automatic_blocks(query, blocks_directory, stemmer, stop_list, n
     return results
 
 
+def search_query_merged_blocks(query, merged_blocks_directory, stemmer, stop_list, n):
+    """
+    Realiza una búsqueda en los bloques fusionados del índice invertido almacenados en 'merged_blocks_directory'.
+    Devuelve los n documentos más relevantes para la consulta.
+    """
+    processed_query = process_query(query, stemmer, stop_list)
+    query_vector = {token: 1 for token in processed_query}  # Simplificación para la demostración
+
+    all_doc_scores = defaultdict(float)
+
+    # Determinar automáticamente el número de bloques fusionados
+    merged_block_files = [f for f in os.listdir(merged_blocks_directory) if
+                          f.startswith("merged_block_") and f.endswith(".json")]
+
+    for block_file in merged_block_files:
+        with open(os.path.join(merged_blocks_directory, block_file), 'r', encoding='utf-8') as file:
+            block = json.load(file)
+            doc_scores = calculate_similarity(block, query_vector, len(merged_block_files))
+            for doc_index, score in doc_scores.items():
+                all_doc_scores[doc_index] += score
+
+    # Ordenar y seleccionar los top n documentos
+    top_docs = sorted(all_doc_scores.items(), key=lambda x: x[1], reverse=True)[:n]
+
+    # Formatear resultados para mostrar el porcentaje de similitud
+    results = [(doc, f"{similarity * 100:.2f}") for doc, similarity in top_docs]
+    return results
+
+
+#######################################################################################################################
+
 # Directorio para guardar los bloques
 blocks_directory = 'blocks'
 os.makedirs(blocks_directory, exist_ok=True)
@@ -252,23 +300,13 @@ my_index.index_docs(["libro1.txt", "libro2.txt", "libro3.txt", "libro4.txt", "li
 # Dividir y guardar los bloques
 num_blocks = divide_and_save_blocks(my_index, BLOCK_SIZE, blocks_directory)
 
-# Fusionar los bloques para reconstruir el índice invertido
-merged_index = sequential_merge_blocks(num_blocks, blocks_directory)
-
-# Reconstruir el índice invertido a partir de los bloques almacenados
-reconstructed_index = reconstruct_index_from_blocks(num_blocks, blocks_directory)
-
-reconstructed_index_str = print_reconstructed_index(reconstructed_index)
-
-# Imprimir el índice reconstruido
-# print(reconstructed_index_str)
-# print('######################################################')
-# print(my_index)
+merge_and_save_blocks('blocks', 'final_blocks', 4096)
 
 stemmer = SnowballStemmer(language='spanish')
 stop_list = 'stop_words_spanish.txt'
-query = "Tras la huida de Frodo y Sam en Parth Galen, Boromir muere a manos de los Uruk-hai"
+query = "En Rohan, Théoden reúne a lanzó al ataque, justo en el momento en el que el Rey Brujo penetraba en Minas Tirith."
 n = 3
-results = search_query_automatic_blocks(query, blocks_directory, stemmer, stop_list, n)
+blocks_directory = 'final_blocks'
+results = search_query_merged_blocks(query, blocks_directory, stemmer, stop_list, n)
 
 print(results)
