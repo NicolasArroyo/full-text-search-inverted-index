@@ -17,8 +17,10 @@ class InvIndexDividerMerger:
     initial_blocks_dir = 'initial_blocks'
     final_blocks_dir = 'final_blocks'
 
-    def __init__(self, inv_index: InvIndex):
-        self.index = inv_index
+    def __init__(self, inv_index = None):
+        if inv_index is not None:
+            self.index = inv_index
+
         self.stemmer = SnowballStemmer(language='spanish')
 
         os.makedirs(self.initial_blocks_dir, exist_ok=True)
@@ -38,6 +40,7 @@ class InvIndexDividerMerger:
             entry_size = len(entry.encode('utf-8'))
 
             if current_block_size + entry_size > self.BLOCK_SIZE:
+                print(f'dividing block_{block_count}')
                 with open(os.path.join(self.initial_blocks_dir, f"block_{block_count}.json"), 'w', encoding='utf-8') as file:
                     json.dump(current_block, file, ensure_ascii=False)
                 block_count += 1
@@ -71,6 +74,7 @@ class InvIndexDividerMerger:
                     entry_size = len(entry.encode('utf-8'))
                     if current_block_size + entry_size > self.BLOCK_SIZE:
                         # Guardar el bloque actual y empezar uno nuevo
+                        print(f'Saving block merged_block_{current_block_count}.json')
                         with open(os.path.join(self.final_blocks_dir, f"merged_block_{current_block_count}.json"), 'w',
                                 encoding='utf-8') as out_file:
                             json.dump(merged_blocks, out_file, ensure_ascii=False)
@@ -148,7 +152,7 @@ class InvIndexDividerMerger:
             doc_scores[doc_index] /= math.sqrt(num_docs)
 
         return doc_scores
-    
+
     def search_query_automatic_blocks(self, query, n):
         """
         Realiza una búsqueda en los bloques del índice invertido sin necesidad de especificar el número de bloques.

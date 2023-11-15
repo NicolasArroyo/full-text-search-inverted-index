@@ -19,6 +19,7 @@ class InvIndex:
             stop_list = [line.rstrip().lower() for line in file]
 
         for doc_idx, doc in enumerate(docs):
+            print(f'Proccessing document {doc}')
             with open(doc, encoding="utf-8") as doc_file:
                 doc_content = doc_file.read()
                 self._process_content(doc_content, doc_idx, stemmer, stop_list)
