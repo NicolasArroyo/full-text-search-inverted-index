@@ -1,15 +1,27 @@
+import json
 import math
+import os
+import pickle
 import re
 
 from collections import defaultdict
+import sys
 from nltk.stem.snowball import SnowballStemmer
 
 from inv_index_attributes import InvIndexKey, InvIndexVal
 
 class InvIndex:
+    PAGE_SIZE = 4096
+    BLOCK_SIZE = PAGE_SIZE
+
+    initial_blocks_dir = 'initial_blocks'
+
     def __init__(self):
         self.inverted_index = defaultdict(list)
         self.docs_counter = 0
+        self.block_count = 0
+
+        os.makedirs(self.initial_blocks_dir, exist_ok=True)
 
     def index_docs(self, docs):
         stemmer = SnowballStemmer(language='spanish')
@@ -24,9 +36,6 @@ class InvIndex:
                 doc_content = doc_file.read()
                 self._process_content(doc_content, doc_idx, stemmer, stop_list)
 
-        self._order_index_by_tokens()
-        self._process_idf()
-
     def _process_content(self, content, doc_idx, stemmer, stop_list):
         doc_words = re.findall(r'\w+', content)
 
@@ -37,12 +46,35 @@ class InvIndex:
             token = stemmer.stem(doc_word)
             index_key = InvIndexKey(token)
 
-            for value in self.inverted_index[index_key]:
-                if value.doc_index == doc_idx:
-                    value.tf += 1
-                    break
+            if index_key in self.inverted_index:
+                for value in self.inverted_index[index_key]:
+                    if value.doc_index == doc_idx:
+                        value.tf += 1
+                        break
+                else:
+                    self.inverted_index[index_key].append(InvIndexVal(doc_idx, 1))
             else:
-                self.inverted_index[index_key].append(InvIndexVal(doc_idx, 1))
+                self.inverted_index[index_key] = [InvIndexVal(doc_idx, 1)]
+
+            index_size = sys.getsizeof(pickle.dumps(self.inverted_index))
+
+            if index_size + sys.getsizeof(index_key) + sys.getsizeof(InvIndexVal(doc_idx, 1)) > self.PAGE_SIZE:
+                self._order_index_by_tokens()
+                self._process_idf()
+
+                self.save_blocks('initial_blocks')
+                self.inverted_index.clear()
+
+    def save_blocks(self, initial_blocks_dir):
+        current_block = {}
+
+        for token, postings in self.inverted_index.items():
+            current_block[token.token] = [(val.doc_index, val.tf, val.tf_idf) for val in postings]
+
+        with open(os.path.join(initial_blocks_dir, f'block_{self.block_count}.json'), 'w', encoding='utf-8') as file:
+            json.dump(current_block, file, ensure_ascii=False)
+
+        self.block_count += 1
 
     def _order_index_by_tokens(self):
         self.inverted_index = dict(sorted(self.inverted_index.items(), key=lambda t: t[0].token))

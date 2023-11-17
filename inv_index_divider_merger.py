@@ -8,7 +8,7 @@ from nltk.stem.snowball import SnowballStemmer
 
 from inv_index import InvIndex
 
-class InvIndexDividerMerger:
+class InvIndexMerger:
     PAGE_SIZE = 4096
     BLOCK_SIZE = PAGE_SIZE
 
@@ -17,44 +17,10 @@ class InvIndexDividerMerger:
     initial_blocks_dir = 'initial_blocks'
     final_blocks_dir = 'final_blocks'
 
-    def __init__(self, inv_index = None):
-        if inv_index is not None:
-            self.index = inv_index
-
+    def __init__(self):
         self.stemmer = SnowballStemmer(language='spanish')
 
-        os.makedirs(self.initial_blocks_dir, exist_ok=True)
         os.makedirs(self.final_blocks_dir, exist_ok=True)
-
-    def divide_and_save_blocks(self):
-        """
-        Divide un índice invertido en bloques y los guarda en 'directory'.
-        """
-
-        current_block = {}
-        current_block_size = 0
-        block_count = 0
-
-        for token, postings in self.index.inverted_index.items():
-            entry = json.dumps({token.token: [(val.doc_index, val.tf, val.tf_idf) for val in postings]})
-            entry_size = len(entry.encode('utf-8'))
-
-            if current_block_size + entry_size > self.BLOCK_SIZE:
-                print(f'dividing block_{block_count}')
-                with open(os.path.join(self.initial_blocks_dir, f"block_{block_count}.json"), 'w', encoding='utf-8') as file:
-                    json.dump(current_block, file, ensure_ascii=False)
-                block_count += 1
-                current_block = {}
-                current_block_size = 0
-
-            current_block[token.token] = [(val.doc_index, val.tf, val.tf_idf) for val in postings]
-            current_block_size += entry_size
-
-        if current_block:
-            with open(os.path.join(self.initial_blocks_dir, f"block_{block_count}.json"), 'w', encoding='utf-8') as file:
-                json.dump(current_block, file, ensure_ascii=False)
-
-        return block_count + 1
 
     def merge_and_save_blocks(self):
         """

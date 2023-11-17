@@ -2,7 +2,7 @@ import os
 import csv
 
 from inv_index import InvIndex
-from inv_index_divider_merger import InvIndexDividerMerger
+from inv_index_divider_merger import InvIndexMerger
 
 def get_docs(file_name: str) -> list:
     os.makedirs('documents', exist_ok=True)
@@ -33,8 +33,7 @@ def main():
     docs = get_docs('spotify_songs.csv')
     index = create_index(docs)
 
-    divider_merger = InvIndexDividerMerger(index)
-    divider_merger.divide_and_save_blocks()
+    divider_merger = InvIndexMerger()
     divider_merger.merge_and_save_blocks()
 
     query = input('query: ')
