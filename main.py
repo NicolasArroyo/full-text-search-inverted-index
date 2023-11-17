@@ -13,7 +13,7 @@ def get_docs(file_name: str) -> list:
             next(reader)
 
             for i, row in enumerate(reader, start=0):
-                line = ', '.join(row[j] for j in [1, 2, 3, 6, 8, 10, 11])
+                line = ', '.join(row[j] for j in [1, 2, 3, 6, 8, 10, 11, -1])
                 language = row[24]
 
                 doc_name = f'documents/doc{i}.txt'

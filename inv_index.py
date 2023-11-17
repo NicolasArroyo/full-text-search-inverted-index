@@ -10,6 +10,7 @@ from nltk.stem.snowball import SnowballStemmer
 
 from inv_index_attributes import InvIndexKey, InvIndexVal
 
+
 class InvIndex:
     PAGE_SIZE = 4096
     BLOCK_SIZE = PAGE_SIZE
@@ -34,6 +35,8 @@ class InvIndex:
             print(f'Proccessing document {doc}')
             with open(doc, encoding="utf-8") as doc_file:
                 doc_content = doc_file.read()
+                # print(doc_content.split(',')[-1])
+                stemmer = get_stemmer(doc_content.split(',')[-1])
                 self._process_content(doc_content, doc_idx, stemmer, stop_list)
 
     def _process_content(self, content, doc_idx, stemmer, stop_list):
@@ -100,3 +103,32 @@ class InvIndex:
             output.append('')
 
         return "\n".join(output)
+
+
+from nltk.stem.snowball import SnowballStemmer
+
+
+def get_stemmer(language: str):
+    stemmer_map = {
+        "ar": "arabic",
+        "da": "danish",
+        "nl": "dutch",
+        "en": "english",
+        "fi": "finnish",
+        "fr": "french",
+        "de": "german",
+        "hu": "hungarian",
+        "it": "italian",
+        "no": "norwegian",
+        "pt": "portuguese",
+        "ro": "romanian",
+        "ru": "russian",
+        "es": "spanish",
+        "sv": "swedish"
+    }
+
+    stemmer_language = stemmer_map.get(language)
+    if stemmer_language:
+        return SnowballStemmer(stemmer_language)
+    else:
+        return SnowballStemmer("english")

@@ -7,6 +7,8 @@ from collections import defaultdict
 from nltk.stem.snowball import SnowballStemmer
 
 from inv_index import InvIndex
+from inv_index import get_stemmer
+
 
 class InvIndexMerger:
     PAGE_SIZE = 4096
@@ -42,7 +44,7 @@ class InvIndexMerger:
                         # Guardar el bloque actual y empezar uno nuevo
                         print(f'Saving block merged_block_{current_block_count}.json')
                         with open(os.path.join(self.final_blocks_dir, f"merged_block_{current_block_count}.json"), 'w',
-                                encoding='utf-8') as out_file:
+                                  encoding='utf-8') as out_file:
                             json.dump(merged_blocks, out_file, ensure_ascii=False)
                         current_block_count += 1
                         merged_blocks = defaultdict(list)
@@ -53,7 +55,7 @@ class InvIndexMerger:
         # Guardar el último bloque si contiene datos
         if merged_blocks:
             with open(os.path.join(self.final_blocks_dir, f"merged_block_{current_block_count}.json"), 'w',
-                    encoding='utf-8') as out_file:
+                      encoding='utf-8') as out_file:
                 json.dump(merged_blocks, out_file, ensure_ascii=False)
 
     def reconstruct_index_from_blocks(self, num_blocks, directory):
@@ -95,14 +97,15 @@ class InvIndexMerger:
 
         return "\n".join(output)
 
-    def process_query(self, query):
+    def process_query(self, query, language:str):
         """
         Procesa la consulta aplicando tokenización, stemming y eliminación de palabras vacías.
         """
         query_tokens = re.findall(r'\w+', query)
+        self.stemmer = get_stemmer(language)
         processed_query = [self.stemmer.stem(word) for word in query_tokens if word not in self.stop_list]
         return processed_query
-    
+
     def calculate_similarity(self, block, query_vector, num_docs):
         """
         Calcula la similitud coseno entre la consulta y los documentos en un bloque.
@@ -146,21 +149,21 @@ class InvIndexMerger:
         # Formatear resultados para mostrar el porcentaje de similitud
         results = [(doc, f"{similarity * 100:.2f}%") for doc, similarity in top_docs]
         return results
-    
-    def search_query_merged_blocks(self, query, k):
+
+    def search_query_merged_blocks(self, query, k, language):
         """
         Realiza una búsqueda en los bloques fusionados del índice invertido almacenados en 'merged_blocks_directory'.
         Devuelve los n documentos más relevantes para la consulta.
         """
 
-        processed_query = self.process_query(query)
+        processed_query = self.process_query(query, language)
         query_vector = {token: 1 for token in processed_query}  # Simplificación para la demostración
 
         all_doc_scores = defaultdict(float)
 
         # Determinar automáticamente el número de bloques fusionados
         merged_block_files = [f for f in os.listdir(self.final_blocks_dir) if
-                            f.startswith("merged_block_") and f.endswith(".json")]
+                              f.startswith("merged_block_") and f.endswith(".json")]
 
         for block_file in merged_block_files:
             with open(os.path.join(self.final_blocks_dir, block_file), 'r', encoding='utf-8') as file:
