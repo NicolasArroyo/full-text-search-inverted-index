@@ -2,7 +2,7 @@ import os
 import csv
 
 from inv_index import InvIndex
-from inv_index_divider_merger import InvIndexMerger
+from inv_index_merger import InvIndexMerger
 
 def get_docs(file_name: str) -> list:
     os.makedirs('documents', exist_ok=True)
@@ -23,26 +23,22 @@ def get_docs(file_name: str) -> list:
 
     return docs_name
 
-def create_index(docs: list) -> InvIndex:
+def create_index(docs: list) -> None:
     index = InvIndex()
     index.index_docs(docs)
 
-    return index
-
 def main():
     docs = get_docs('spotify_songs.csv')
-    index = create_index(docs)
+    create_index(docs)
 
-    divider_merger = InvIndexMerger()
-    divider_merger.merge_and_save_blocks()
+    merger = InvIndexMerger()
+    merger.merge_and_save_blocks()
 
     query = input('query: ')
-    # query = "En Rohan, Théoden reúne a lanzó al ataque, justo en el momento en el que el Rey Brujo penetraba en Minas Tirith."
     k = int(input('#docs más cercanos: '))
-    # k = 3
+    language = str(input('Language abbreviation: '))
 
-
-    results = divider_merger.search_query_merged_blocks(query, k)
+    results = merger.search_query_merged_blocks(query, k, language)
     print(results)
 
 if __name__ == "__main__":

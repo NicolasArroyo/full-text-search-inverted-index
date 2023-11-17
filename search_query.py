@@ -1,6 +1,6 @@
 import time
 
-from inv_index_divider_merger import InvIndexMerger
+from inv_index_merger import InvIndexMerger
 
 if __name__ == '__main__':
     divider_merger = InvIndexMerger()

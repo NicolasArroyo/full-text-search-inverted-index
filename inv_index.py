@@ -3,17 +3,15 @@ import math
 import os
 import pickle
 import re
+import sys
 
 from collections import defaultdict
-import sys
 from nltk.stem.snowball import SnowballStemmer
 
 from inv_index_attributes import InvIndexKey, InvIndexVal
 
-
 class InvIndex:
     PAGE_SIZE = 4096
-    BLOCK_SIZE = PAGE_SIZE
 
     initial_blocks_dir = 'initial_blocks'
 
@@ -21,29 +19,31 @@ class InvIndex:
         self.inverted_index = defaultdict(list)
         self.docs_counter = 0
         self.block_count = 0
+        self.stop_list = []
 
         os.makedirs(self.initial_blocks_dir, exist_ok=True)
 
+    def get_stop_list(self):
+        with open('stop_words_spanish.txt', encoding='utf-8') as file:
+            self.stop_list = [line.rstrip().lower() for line in file]
+
     def index_docs(self, docs):
-        stemmer = SnowballStemmer(language='spanish')
         self.docs_counter = self.docs_counter + len(docs)
 
-        with open('stop_words_spanish.txt', encoding='utf-8') as file:
-            stop_list = [line.rstrip().lower() for line in file]
+        self.get_stop_list()
 
         for doc_idx, doc in enumerate(docs):
             print(f'Proccessing document {doc}')
             with open(doc, encoding="utf-8") as doc_file:
                 doc_content = doc_file.read()
-                # print(doc_content.split(',')[-1])
                 stemmer = get_stemmer(doc_content.split(',')[-1])
-                self._process_content(doc_content, doc_idx, stemmer, stop_list)
+                self._process_content(doc_content, doc_idx, stemmer)
 
-    def _process_content(self, content, doc_idx, stemmer, stop_list):
+    def _process_content(self, content, doc_idx, stemmer):
         doc_words = re.findall(r'\w+', content)
 
         for doc_word in doc_words:
-            if doc_word in stop_list:
+            if doc_word in self.stop_list:
                 continue
 
             token = stemmer.stem(doc_word)
@@ -65,16 +65,17 @@ class InvIndex:
                 self._order_index_by_tokens()
                 self._process_idf()
 
-                self.save_blocks('initial_blocks')
+                self.save_current_block()
+
                 self.inverted_index.clear()
 
-    def save_blocks(self, initial_blocks_dir):
+    def save_current_block(self):
         current_block = {}
 
         for token, postings in self.inverted_index.items():
             current_block[token.token] = [(val.doc_index, val.tf, val.tf_idf) for val in postings]
 
-        with open(os.path.join(initial_blocks_dir, f'block_{self.block_count}.json'), 'w', encoding='utf-8') as file:
+        with open(os.path.join(self.initial_blocks_dir, f'block_{self.block_count}.json'), 'w', encoding='utf-8') as file:
             json.dump(current_block, file, ensure_ascii=False)
 
         self.block_count += 1
@@ -103,10 +104,6 @@ class InvIndex:
             output.append('')
 
         return "\n".join(output)
-
-
-from nltk.stem.snowball import SnowballStemmer
-
 
 def get_stemmer(language: str):
     stemmer_map = {
