@@ -7,22 +7,26 @@ from collections import defaultdict
 
 from inv_index import get_stemmer
 
+
 class InvIndexMerger:
     PAGE_SIZE = 4096
     BLOCK_SIZE = PAGE_SIZE
 
     stop_list = 'stop_words_spanish.txt'
 
-    initial_blocks_dir = 'initial_blocks'
-    final_blocks_dir = 'final_blocks'
-
-    def __init__(self):
+    def __init__(self, language: str):
+        self.language = language
+        self.initial_blocks_dir = 'initial_blocks_' + self.language
+        self.final_blocks_dir = 'final_blocks_' + self.language
         os.makedirs(self.final_blocks_dir, exist_ok=True)
 
     def merge_and_save_blocks(self):
         """
         Fusiona los bloques en 'input_directory' y guarda los bloques fusionados en 'output_directory'.
         """
+
+        if not os.path.exists(self.initial_blocks_dir):
+            return
 
         block_files = [f for f in os.listdir(self.initial_blocks_dir) if f.startswith("block_") and f.endswith(".json")]
         merged_blocks = defaultdict(list)
@@ -51,11 +55,12 @@ class InvIndexMerger:
                       encoding='utf-8') as out_file:
                 json.dump(merged_blocks, out_file, ensure_ascii=False)
 
-    def process_query(self, query, language:str):
+    def process_query(self, query, language: str):
         """
         Procesa la consulta aplicando tokenización, stemming y eliminación de palabras vacías.
         """
         query_tokens = re.findall(r'\w+', query)
+        print(language)
         self.stemmer = get_stemmer(language)
         processed_query = [self.stemmer.stem(word) for word in query_tokens if word not in self.stop_list]
         return processed_query
@@ -75,13 +80,13 @@ class InvIndexMerger:
 
         return doc_scores
 
-    def search_query_merged_blocks(self, query, k, language):
+    def search_query_merged_blocks(self, query, k):
         """
         Realiza una búsqueda en los bloques fusionados del índice invertido almacenados en 'merged_blocks_directory'.
         Devuelve los n documentos más relevantes para la consulta.
         """
 
-        processed_query = self.process_query(query, language)
+        processed_query = self.process_query(query, self.language)
         query_vector = {token: 1 for token in processed_query}
 
         all_doc_scores = defaultdict(float)
@@ -89,15 +94,17 @@ class InvIndexMerger:
         merged_block_files = [f for f in os.listdir(self.final_blocks_dir) if
                               f.startswith("merged_block_") and f.endswith(".json")]
 
+        print(query_vector)
+
         for block_file in merged_block_files:
             with open(os.path.join(self.final_blocks_dir, block_file), 'r', encoding='utf-8') as file:
                 block = json.load(file)
+                print(block)
                 doc_scores = self.calculate_similarity(block, query_vector, len(merged_block_files))
                 for doc_index, score in doc_scores.items():
                     all_doc_scores[doc_index] += score
 
         top_docs = sorted(all_doc_scores.items(), key=lambda x: x[1], reverse=True)[:k]
-
         results = [(doc, f"{similarity * 100:.2f}") for doc, similarity in top_docs]
         return results
 

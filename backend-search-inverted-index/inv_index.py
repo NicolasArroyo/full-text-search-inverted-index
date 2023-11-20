@@ -10,18 +10,20 @@ from nltk.stem.snowball import SnowballStemmer
 
 from inv_index_attributes import InvIndexKey, InvIndexVal
 
+
 class InvIndex:
     PAGE_SIZE = 4096
 
-    initial_blocks_dir = 'initial_blocks'
 
-    def __init__(self):
+    def __init__(self, language):
         self.inverted_index = defaultdict(list)
         self.docs_counter = 0
         self.block_count = 0
         self.stop_list = []
-
+        self.language = language
+        self.initial_blocks_dir = 'initial_blocks_' + self.language
         os.makedirs(self.initial_blocks_dir, exist_ok=True)
+
 
     def get_stop_list(self):
         with open('stop_words_spanish.txt', encoding='utf-8') as file:
@@ -33,9 +35,12 @@ class InvIndex:
         self.get_stop_list()
 
         for doc_idx, doc in enumerate(docs):
-            print(f'Proccessing document {doc}')
             with open(doc, encoding="utf-8") as doc_file:
                 doc_content = doc_file.read()
+
+                if doc_content.split(',')[-1] != " " + self.language:
+                    continue
+
                 stemmer = get_stemmer(doc_content.split(',')[-1])
                 self._process_content(doc_content, doc_idx, stemmer)
 
@@ -75,7 +80,8 @@ class InvIndex:
         for token, postings in self.inverted_index.items():
             current_block[token.token] = [(val.doc_index, val.tf, val.tf_idf) for val in postings]
 
-        with open(os.path.join(self.initial_blocks_dir, f'block_{self.block_count}.json'), 'w', encoding='utf-8') as file:
+        with open(os.path.join(self.initial_blocks_dir, f'block_{self.block_count}.json'), 'w',
+                  encoding='utf-8') as file:
             json.dump(current_block, file, ensure_ascii=False)
 
         self.block_count += 1
@@ -105,23 +111,24 @@ class InvIndex:
 
         return "\n".join(output)
 
+
 def get_stemmer(language: str):
     stemmer_map = {
-        "ar": "arabic",
-        "da": "danish",
-        "nl": "dutch",
-        "en": "english",
-        "fi": "finnish",
-        "fr": "french",
-        "de": "german",
-        "hu": "hungarian",
-        "it": "italian",
-        "no": "norwegian",
-        "pt": "portuguese",
-        "ro": "romanian",
-        "ru": "russian",
-        "es": "spanish",
-        "sv": "swedish"
+        " ar": "arabic",
+        " da": "danish",
+        " nl": "dutch",
+        " en": "english",
+        " fi": "finnish",
+        " fr": "french",
+        " de": "german",
+        " hu": "hungarian",
+        " it": "italian",
+        " no": "norwegian",
+        " pt": "portuguese",
+        " ro": "romanian",
+        " ru": "russian",
+        " es": "spanish",
+        " sv": "swedish"
     }
 
     stemmer_language = stemmer_map.get(language)
