@@ -1,1 +1,41 @@
 venv/
+backend-search-inverted-index/documents/
+backend-search-inverted-index/initial_blocks/
+backend-search-inverted-index/final_blocks/
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+frontend-search-inverted-index/node_modules
+frontend-search-inverted-index/.pnp
+frontend-search-inverted-index/.pnp.js
+frontend-search-inverted-index/.yarn/install-state.gz
+
+# testing
+frontend-search-inverted-index/coverage
+
+# next.js
+frontend-search-inverted-index/.next/
+frontend-search-inverted-index/out/
+
+# production
+frontend-search-inverted-index/build
+
+# misc
+frontend-search-inverted-index/.DS_Store
+frontend-search-inverted-index/*.pem
+
+# debug
+frontend-search-inverted-index/npm-debug.log*
+frontend-search-inverted-index/yarn-debug.log*
+frontend-search-inverted-index/yarn-error.log*
+
+# local env files
+frontend-search-inverted-index/.env*.local
+
+# vercel
+frontend-search-inverted-index/.vercel
+
+# typescript
+frontend-search-inverted-index/*.tsbuildinfo
+frontend-search-inverted-index/next-env.d.ts
