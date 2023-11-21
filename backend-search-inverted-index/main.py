@@ -27,7 +27,7 @@ def get_docs(file_name: str) -> list:
 
 def create_index(docs: list) -> None:
     stemmer_map = ["ar", "da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "es", "sv", ]
-    # stemmer_map = ["ar", "da", "nl", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "sv", ]
+    # stemmer_map = ["ar", "da", "nl", "fi", "fr", "de", "hu", "it", "ro"]
 
     for i in stemmer_map:
         print(i)
@@ -36,21 +36,27 @@ def create_index(docs: list) -> None:
 
 
 def main():
-    stemmer_map = ["ar", "da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "es", "sv", ]
+    # stemmer_map = ["ar", "da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "es", "sv", ]
+    # stemmer_map = ["ar", "da", "nl", "fi", "fr", "de", "hu", "it", "ro"]
 
-    docs = get_docs('spotify_songs.csv')
-    create_index(docs)
+    # docs = get_docs('spotify_songs.csv')
+    # create_index(docs)
 
-    for i in stemmer_map:
-        merger = InvIndexMerger(i)
-        merger.merge_and_save_blocks()
+    # for i in stemmer_map:
+    #     merger = InvIndexMerger(i)
+    #     merger.merge_and_save_blocks()
 
-    # query = input('query: ')
-    # k = int(input('#docs más cercanos: '))
-    # language = str(input('Language abbreviation: '))
-    #
-    # results = merger.search_query_merged_blocks(query, k, language)
-    # print(results)
+    # merger = InvIndexMerger("it")
+    # merger.merge_and_save_blocks()
+
+    query = input('query: ')
+    k = int(input('#docs más cercanos: '))
+    language = str(input('Language abbreviation: '))
+
+    merger = InvIndexMerger(language)
+
+    results = merger.search_query_merged_blocks(query, k)
+    print(results)
 
 
 if __name__ == "__main__":

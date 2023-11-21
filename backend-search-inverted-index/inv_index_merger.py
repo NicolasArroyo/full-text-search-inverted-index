@@ -25,10 +25,11 @@ class InvIndexMerger:
         Fusiona los bloques en 'input_directory' y guarda los bloques fusionados en 'output_directory'.
         """
 
-        if not os.path.exists(self.initial_blocks_dir):
-            return
+        # if not os.path.exists(self.initial_blocks_dir):
+        #     return
 
         block_files = [f for f in os.listdir(self.initial_blocks_dir) if f.startswith("block_") and f.endswith(".json")]
+        print(len(block_files))
         merged_blocks = defaultdict(list)
         current_block_size = 0
         current_block_count = 0
@@ -55,13 +56,12 @@ class InvIndexMerger:
                       encoding='utf-8') as out_file:
                 json.dump(merged_blocks, out_file, ensure_ascii=False)
 
-    def process_query(self, query, language: str):
+    def process_query(self, query):
         """
         Procesa la consulta aplicando tokenización, stemming y eliminación de palabras vacías.
         """
         query_tokens = re.findall(r'\w+', query)
-        print(language)
-        self.stemmer = get_stemmer(language)
+        self.stemmer = get_stemmer(" " + self.language)
         processed_query = [self.stemmer.stem(word) for word in query_tokens if word not in self.stop_list]
         return processed_query
 
@@ -86,7 +86,7 @@ class InvIndexMerger:
         Devuelve los n documentos más relevantes para la consulta.
         """
 
-        processed_query = self.process_query(query, self.language)
+        processed_query = self.process_query(query)
         query_vector = {token: 1 for token in processed_query}
 
         all_doc_scores = defaultdict(float)
@@ -94,12 +94,9 @@ class InvIndexMerger:
         merged_block_files = [f for f in os.listdir(self.final_blocks_dir) if
                               f.startswith("merged_block_") and f.endswith(".json")]
 
-        print(query_vector)
-
         for block_file in merged_block_files:
             with open(os.path.join(self.final_blocks_dir, block_file), 'r', encoding='utf-8') as file:
                 block = json.load(file)
-                print(block)
                 doc_scores = self.calculate_similarity(block, query_vector, len(merged_block_files))
                 for doc_index, score in doc_scores.items():
                     all_doc_scores[doc_index] += score

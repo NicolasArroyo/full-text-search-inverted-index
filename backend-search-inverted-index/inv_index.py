@@ -14,7 +14,6 @@ from inv_index_attributes import InvIndexKey, InvIndexVal
 class InvIndex:
     PAGE_SIZE = 4096
 
-
     def __init__(self, language):
         self.inverted_index = defaultdict(list)
         self.docs_counter = 0
@@ -23,7 +22,6 @@ class InvIndex:
         self.language = language
         self.initial_blocks_dir = 'initial_blocks_' + self.language
         os.makedirs(self.initial_blocks_dir, exist_ok=True)
-
 
     def get_stop_list(self):
         with open('stop_words_spanish.txt', encoding='utf-8') as file:
