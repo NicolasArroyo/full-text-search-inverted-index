@@ -4,6 +4,9 @@ import { Select, SelectItem } from "@nextui-org/select"
 import { languages } from "@/components/languages";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Button } from "@nextui-org/button";
+import Dashboard from "@/components/dashboard";
+import { useState } from "react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
 
 type Inputs = {
 	query: string
@@ -20,13 +23,19 @@ export default function Home() {
 		formState: { errors },
 	} = useForm<Inputs>()
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		console.log(data)
+	const [data, setData] = useState<Inputs>({
+		query: "",
+		topk: 0,
+		lang: ""
+	});
+
+	const onSubmit: SubmitHandler<Inputs> = (_data) => {
+		setData(_data);
 	}
 
 	return (
 		<div>
-			<form action="" className="flex gap-5 items-center" onSubmit={handleSubmit(onSubmit)}>
+			<form action="" className="flex gap-5 items-center mb-10" onSubmit={handleSubmit(onSubmit)}>
 				<Input
 					isRequired
 					type="text"
@@ -57,12 +66,26 @@ export default function Home() {
 					))}
 				</Select>
 
-				<Button 
+				<Button
 					color="primary"
 					type="submit"
 				>Search</Button>
-
 			</form>
+			<div className="w-full flex justify-center items-center">
+				{data.query != "" ?
+					<Dashboard query={data.query} k={data.topk} language={data.lang} />
+					: <Table aria-label="Results of Search">
+						<TableHeader>
+							<TableColumn>Title</TableColumn>
+							<TableColumn>Author</TableColumn>
+							<TableColumn>Lyrics</TableColumn>
+							<TableColumn>Similarity</TableColumn>
+							<TableColumn>Spotify Link</TableColumn>
+						</TableHeader>
+						<TableBody emptyContent={"Haz tu primera busqueda."}>{[]}</TableBody>
+					</Table>
+				}
+			</div>
 		</div>
 	);
 }

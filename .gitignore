@@ -1,7 +1,8 @@
-venv/
+backend-search-inverted-index/venv/
 backend-search-inverted-index/documents/
-backend-search-inverted-index/initial_blocks/
-backend-search-inverted-index/final_blocks/
+backend-search-inverted-index/initial_blocks*/
+backend-search-inverted-index/final_blocks*/
+backend-search-inverted-index/__pycache__/
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

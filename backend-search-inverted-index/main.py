@@ -1,63 +1,54 @@
-import os
-import csv
-
-from inv_index import InvIndex
+import time
+from fastapi import FastAPI
 from inv_index_merger import InvIndexMerger
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
 
-def get_docs(file_name: str) -> list:
-    os.makedirs('documents', exist_ok=True)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    docs_name = []
-    with open(file_name, 'r') as file:
-        reader = csv.reader(file)
-        next(reader)
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
-        for i, row in enumerate(reader, start=0):
-            line = ', '.join(row[j] for j in [0, 1, 2, 3, 6, 8, 10, 11, -1])
-            language = row[24]
+class Item(BaseModel):
+    language: str
+    query: str
+    k: int
 
-            doc_name = f'documents/doc{i}.txt'
-            docs_name.append(doc_name)
-            with open(doc_name, 'w') as txt_file:
-                txt_file.write(line)
+@app.post("/search/")
+async def search(item : Item):
+    language = item.language
+    query = item.query
+    k = item.k
 
-    return docs_name
-
-
-def create_index(docs: list) -> None:
-    stemmer_map = ["ar", "da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "es", "sv", ]
-    # stemmer_map = ["ar", "da", "nl", "fi", "fr", "de", "hu", "it", "ro"]
-
-    for i in stemmer_map:
-        print(i)
-        index_i = InvIndex(i)
-        index_i.index_docs(docs)
-
-
-def main():
-    # stemmer_map = ["ar", "da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ro", "ru", "es", "sv", ]
-    # stemmer_map = ["ar", "da", "nl", "fi", "fr", "de", "hu", "it", "ro"]
-
-    # docs = get_docs('spotify_songs.csv')
-    # create_index(docs)
-
-    # for i in stemmer_map:
-    #     merger = InvIndexMerger(i)
-    #     merger.merge_and_save_blocks()
-
-    # merger = InvIndexMerger("it")
-    # merger.merge_and_save_blocks()
-
-    query = input('query: ')
-    k = int(input('#docs más cercanos: '))
-    language = str(input('Language abbreviation: '))
+    print(language, query, k)
 
     merger = InvIndexMerger(language)
 
+    start_time = time.time()
     results = merger.search_query_merged_blocks(query, k)
-    print(results)
+    end_time = time.time()
+
+    elapsed_time = end_time - start_time
 
 
-if __name__ == "__main__":
-    main()
+    results = [
+        {
+            "track_id": open(f"./documents/doc{result[0]}.txt", 'r').readline()[:22],
+            "similarity": result[1]
+        } for result in results
+    ]
+
+    return {
+        "code": 200,
+        "results": results,
+        "time": round(elapsed_time, 2)
+    }

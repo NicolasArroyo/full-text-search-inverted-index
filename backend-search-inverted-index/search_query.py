@@ -7,9 +7,9 @@ if __name__ == '__main__':
     # k = int(input('Top k: '))
     # language = str(input('Language abbreviation: '))
 
-    query = "a"
-    k = 3
-    language = "it"
+    query = "Good Kid"
+    k = 5
+    language = "en"
 
     merger = InvIndexMerger(language)
 
@@ -20,4 +20,8 @@ if __name__ == '__main__':
     elapsed_time = end_time - start_time
 
     print(f'Elapsed time: {elapsed_time} seconds')
-    print(results)
+    
+    for result in results:
+        path = f"./documents/doc{result[0]}.txt"
+        print(open(path, 'r').readline()[:22])
+
