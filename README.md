@@ -30,6 +30,15 @@
 # Frontend
 ## Diseño GUI
 ### Manual de uso
+Primero se debe obtener una Spotify API Key. Para esto se debe hacer la siguiente request con la información correspondiente.
+
+```zsh
+curl -X POST "https://accounts.spotify.com/api/token" \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "grant_type=client_credentials&client_id=your-client-id&client_secret=your-client-secret"
+
+```
+
 ### Screenshots
 ## Análisis comparativo visual con otras implementaciones
 
