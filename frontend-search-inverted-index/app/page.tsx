@@ -78,7 +78,6 @@ export default function Home() {
 						<TableHeader>
 							<TableColumn>Title</TableColumn>
 							<TableColumn>Author</TableColumn>
-							<TableColumn>Lyrics</TableColumn>
 							<TableColumn>Similarity</TableColumn>
 							<TableColumn>Spotify Link</TableColumn>
 						</TableHeader>
