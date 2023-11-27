@@ -1,11 +1,5 @@
 # Proyecto 2 y 3 - BD II
 
-# Integrantes:
-- Nicolas Arroyo
-- Josué Arriaga
-- Max Antunez
-- Gabriel Espinoza
-
 # Integrantes
 
 | <a href="https://github.com/jmac-94" target="_blank">**Josué Mauricio Arriaga Colchado**</a> | <a href="https://github.com/NicolasArroyo" target="_blank">**Nicolas Mateo Arroyo Chávez**</a> | <a href="https://github.com/Gabrieleeh32159" target="_blank">**Gabriel Espinoza**</a> | <a href="https://github.com/Gabrieleeh32159" target="_blank">**Max Antúnez**</a> |
