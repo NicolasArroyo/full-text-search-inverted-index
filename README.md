@@ -70,8 +70,6 @@ index.nprobe = nprobe
 
 4. Creación de listas invertidas: Por cada cluster se crea una lista invertida de los puntos que pertenecen a él.
 
-![faiss_step4](images/faiss_step4.png)
-
 ## Búsquedas
 ### Sequential
 #### KNN-heap
@@ -89,6 +87,8 @@ En primer lugar, se itera punto por punto de la colección y se calcula su dista
 1. Cluster más cercano: Elegir el cluster a menor distancia del query vector.
 2. Búsqueda en el cluster más cercano: Se busca los k vecinos más cercanos dentro de la lista invertida del cluster más cercano.
 3. Problema del borde: Si el query vector cerca de otros clusters pueden existir puntos más cercanos a él en esos otros clusters. Por ello, se busca en cierta cantidad de clusters vecinos además del más cercano (parámetro ```nprobe```).
+
+![faiss_step4](images/faiss_step4.png)
 
 ## Maldición de la dimensionalidad
 ## Mitigar la maldición de la dimensionalidad
