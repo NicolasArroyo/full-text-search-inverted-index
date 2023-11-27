@@ -133,8 +133,7 @@ Es un fenómeno que ocurre cuando se analizan datos de alta dimensión que afect
 ![faiss_step3](images/faiss_step3.png)
 
 # Frontend
-## Diseño GUI
-### Manual de uso
+## Manual de uso
 1. Primero se debe obtener una Spotify API Key. Para esto se debe hacer la siguiente request con la información correspondiente requerida, que se saca de la web para desarrolladores de Spotify.
 
 ```zsh
@@ -158,7 +157,7 @@ npm run dev
 ```
 Finalmente dirigirse al link que aparecerá en la terminal.
 
-### Screenshots
+## Diseño GUI
 
 1. Cuando entramos en la app sin hacer alguna busqueda.
 
@@ -171,8 +170,6 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 3. Cuando buscamos los 5 mas cercanos usando el indice multidimensional.
 
 ![gui1](./images/gui3.png)
-
-## Análisis comparativo visual con otras implementaciones
 
 # Experimentación
 ## Resultados experimentales
