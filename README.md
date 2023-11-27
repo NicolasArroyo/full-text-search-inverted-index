@@ -39,7 +39,39 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 
 # Backend: Índice Multidimensional
 ## Técnica de transformación de audio a vector característico usada
-Para poder manejar los audios .wav de una mejor manera, hemos decidido convertirlos a vectores característicos. En primer lugar, se ha calculado los Mel-frequency cepstral coefficients (MFCCs) para manejar las características más importantes del audio, ignorando a factores externos como puede ser el ruido de fondo o el volumen del audio, así asemejándose a cómo un humano escucha con normalidad. Después, aplicamos una normalización a cada uno de los arrays que representan los MFCCs, así teniendo en cada uno un total de 80 elementos. Esto asegura que nuestras librerías puedan trabajar con ellos, pues necesitan tener las mismas dimensiones cada uno de los elementos.
+
+Para poder manejar los audios .wav de una mejor manera, hemos decidido convertirlos a vectores característicos. En primer lugar, se ha calculado los Mel-frequency cepstral coefficients (MFCCs) para manejar las características más importantes del audio, ignorando a factores externos como puede ser el ruido de fondo o el volumen del audio, así asemejándose a cómo un humano escucha con normalidad. 
+
+```python
+def get_normalized_mfcc(audio_file: str) -> ndarray:
+    y, _ = librosa.load(audio_file, sr=None)
+    mfcc = librosa.feature.mfcc(y=y)
+
+    return normalize_mfcc(mfcc)
+```
+
+Después, aplicamos una normalización a cada uno de los arrays que representan los MFCCs, así teniendo en cada uno un total de 80 elementos. Esto asegura que nuestras librerías puedan trabajar con ellos, pues necesitan tener las mismas dimensiones cada uno de los elementos.
+
+```python
+def normalize_mfcc(mfcc: ndarray, num_features: int = 20) -> ndarray:
+    num_features = min(mfcc.shape[1], num_features)
+
+    normalized_features = []
+
+    for i in range(num_features):
+        coef_features = mfcc[:, i]
+        min_val = np.min(coef_features)
+        max_val = np.max(coef_features)
+        mean_val = np.mean(coef_features)
+        std_val = np.std(coef_features)
+
+        normalized_features.extend([min_val, max_val, mean_val, std_val])
+
+    return np.array(normalized_features)
+```
+
+![mfccs](images/librosa-mfcc.png)
+
 
 ## Técnica de indexación de las librerías utilizadas
 ### Rtree
