@@ -39,6 +39,22 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 ## Técnica de transformación de audio a vector característico usada
 ## Técnica de indexación de las librerías utilizadas
 ### Rtree
+El ```rtree``` es una estructura de datos similar al BTree, pero para más de una dimensión. Es usado ampliamente por su eficiencia en búsquedas espaciales, manejo de datos multidimensionales y escalamiento con gran cantidad de datos.
+
+```python
+prop = rtree_index.Property()
+prop.dimension = collection.shape[1]
+index = rtree_index.Index('rtree_index', properties=prop, interleaved=False)
+```
+
+**Pasos de construcción:**
+1. Se empieza con una raíz vacía.
+2. Se agrega punto por punto al árbol.
+3. Eliges un lugar donde haya espacio, si no lo hay creas otro nodo.
+4. La lógica del árbol colocará los puntos en MBRs que probablemente estén dentro de otros MBRs y así sucesivamente.
+
+![rtree_build1](images/rtree_build1.png)
+![rtree_build2](images/rtree_build2.png)
 
 ### Faiss
 Usamos el ```Inverted Index File Flat``` el cual consiste en agrupar en n clusters los vectores característicos mediante los diagramas de Voronoi.
@@ -87,6 +103,9 @@ El radio para la consulta se selecciona mediante el análisis de la distribució
 El radio de búsqueda se calcula a partir del percentil escogido, reflejando el porcentaje de puntos que deseamos incluir alrededor del punto de consulta. Esto permite que el radio se ajuste a la densidad de nuestro conjunto de datos.
 
 ### Rtree
+
+![rtree_search](images/rtree_search.png)
+
 ### Faiss
 1. Cluster más cercano: Elegir el cluster a menor distancia del query vector.
 2. Búsqueda en el cluster más cercano: Se busca los k vecinos más cercanos dentro de la lista invertida del cluster más cercano.
