@@ -28,16 +28,18 @@ type KnnRow = {
     spotify_link: string
 }
 
-const SPOTIFY_TOKEN = "BQCsG6jDn5kWlhvt6JIX32MPRDPskLT52oiW34KTy-IJmOyTr9QzRmIDIi-xSR4lo5qQ2qE9da6-FFIbgDqv-zSXVE8fG0KFpUlv1QbWp8jxE_qRLGA"
+const SPOTIFY_TOKEN = "BQCBGZuu7PtyIRYxnZGanryZABvhqyeEpsbQyZ8-bpzR0qAqVSRsVpV_IgPhOEk-g-9TICJbtrzVcFHCQO-OBjjxdGzxtQ1Dw-_DMp-2MivIVPqf898"
 
 export default function Dashboard({
     query,
     k,
-    language
+    language,
+    index
 }: {
     query: string,
     k: number,
-    language: string
+    language: string,
+    index: string
 }) {
     const [data, setData] = useState<Row[]>([])
     const [time, setTime] = useState<number>(0)
@@ -56,7 +58,8 @@ export default function Dashboard({
             body: JSON.stringify({
                 "query": query,
                 "k": k,
-                "language": language
+                "language": language,
+                "index": index
             })
         })
             .then(response => response.json())
@@ -86,7 +89,7 @@ export default function Dashboard({
                     })
                 });
             })
-    }, [query, k, language])
+    }, [query, k, language, index])
 
     const [notFound, setNotFound] = useState<boolean>(false)
     const [search, setSearch] = useState<Row>({

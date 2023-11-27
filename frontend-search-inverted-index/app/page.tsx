@@ -12,6 +12,7 @@ type Inputs = {
 	query: string
 	topk: number
 	lang: string
+	index: string
 }
 
 export default function Home() {
@@ -26,10 +27,12 @@ export default function Home() {
 	const [data, setData] = useState<Inputs>({
 		query: "",
 		topk: 0,
-		lang: ""
+		lang: "",
+		index: ""
 	});
 
 	const onSubmit: SubmitHandler<Inputs> = (_data) => {
+		console.log(_data)
 		setData(_data);
 	}
 
@@ -66,6 +69,21 @@ export default function Home() {
 					))}
 				</Select>
 
+				<Select
+					isRequired
+					label="Type of index"
+					className="max-w-xs"
+					{...register("index")}
+				>
+					<SelectItem key={"postgres"} value={"postgres"}>
+						{"postgres"}
+					</SelectItem>
+
+					<SelectItem key={"myindex"} value={"myindex"}>
+						{"Indice propio"}
+					</SelectItem>
+				</Select>
+
 				<Button
 					color="primary"
 					type="submit"
@@ -73,7 +91,7 @@ export default function Home() {
 			</form>
 			<div className="w-full flex justify-center items-center">
 				{data.query != "" ?
-					<Dashboard query={data.query} k={data.topk} language={data.lang} />
+					<Dashboard query={data.query} k={data.topk} language={data.lang} index={data.index} />
 					: <Table aria-label="Results of Search">
 						<TableHeader>
 							<TableColumn>Title</TableColumn>
