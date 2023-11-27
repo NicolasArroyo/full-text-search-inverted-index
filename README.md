@@ -75,12 +75,16 @@ index.nprobe = nprobe
 #### KNN-heap
 En primer lugar, se itera punto por punto de la colección y se calcula su distancia con el query vector. Después, se crea un heap con la finalidad de mantener siempre los k más cercanos. Finalmente, una vez recorrida toda la colección se ordena el heap y se retorna como una lista.
 
-![knn_sequential_search](images/knn_sequential_search.png)
+![knn_sequential_search](images/sequential_knn_search.png)
 
 #### Por rango
 En primer lugar, se itera punto por punto de la colección y se calcula su distancia con el query vector. Si la distancia de este punto es menor al radio r dado entonces se agrega al resultado final.
 
 ![sequential_range_search](images/sequential_range_search.png)
+
+El radio para la consulta se selecciona mediante el análisis de la distribución de la data, donde a partir de un percentil (% de data que queremos hallar entorno a la query) se calcula un radio. 
+
+El radio de búsqueda se calcula a partir del percentil escogido, reflejando el porcentaje de puntos que deseamos incluir alrededor del punto de consulta. Esto permite que el radio se ajuste a la densidad de nuestro conjunto de datos.
 
 ### Rtree
 ### Faiss
