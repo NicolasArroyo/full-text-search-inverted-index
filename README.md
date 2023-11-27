@@ -39,20 +39,18 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 
 ## Construcción del índice invertido en PostgreSQL
 Primero creamos una tabla donde agregamos las filas del archivo 'spotify.csv', luego para poder crear el índice invertido en PostgreSQL agregamos una columna donde combinaremos todos los atributos en formato texto.
+
 ```sql
 CREATE INDEX combined_text_idx ON songslist USING gin(to_tsvector('english', combined_text));
 ```
-Este código crea un índice de texto completo donde utilizamos dos funciones principales
-###to_tsvector('english',combined_text)
-esta función convierte combined_text en un vector de términos de búsqueda de texto completo. 'english' es el parámetro que determina como se procesan las palabras, por ejemplo: eliminando stopwords o aplicando stemming.
-###USING GIN
-Estamos especificando a Postgres que usaremos un índice GIN(Generalized Inverted Index). GIN está optimizado para manejar vectores de texto completo
+Este código crea un índice de texto completo donde utilizamos dos funciones principales:
+
+- ```to_tsvector('english',combined_text)```: Convierte combined_text en un vector de términos de búsqueda de texto completo. ```language='english'``` es el parámetro que determina en qué lenguaje se procesan las palabras y sus stopwords.
+- ```USING GIN```: Estamos especificando a Postgres que usaremos un índice GIN (Generalized Inverted Index). GIN está optimizado para manejar vectores de texto completo
 
 ¿Cómo Funciona?
-
-Indexación: En un índice GIN, PostgreSQL mapea cada término único (como las palabras en un texto) a los identificadores de las filas en las que aparece.
-
-Estructura Invertida: Lo que hace que un índice GIN sea "invertido" es que, en lugar de listar los términos en orden y luego buscar las filas correspondientes (como en un índice tradicional), lista los términos y luego apunta directamente a las filas donde estos términos aparecen.
+- Indexación: En un índice GIN, PostgreSQL mapea cada término único (como las palabras en un texto) a los identificadores de las filas en las que aparece.
+- Estructura Invertida: Lo que hace que un índice GIN sea "invertido" es que, en lugar de listar los términos en orden y luego buscar las filas correspondientes (como en un índice tradicional), lista los términos y luego apunta directamente a las filas donde estos términos aparecen.
 
 # Backend: Índice Multidimensional
 ## Técnica de transformación de audio a vector característico usada
