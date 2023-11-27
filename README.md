@@ -145,6 +145,28 @@ curl -X POST "https://accounts.spotify.com/api/token" \
 
 # Experimentación
 ## Resultados experimentales
+### Experimento 1
+|         | MyIndex | PostgreSQL |
+|---------|----------------|-----------|
+| N=1000  |                |           |
+| N=2000  |                |           |
+| N=4000  |                |           |
+| N=8000  |                |           |
+| N=10000 |                |           |
+| N=14000 |                |           |
+| N=18000 |                |           |
+
+### Experimento 2
+|         | KNN-Sequential | KNN-RTree | KNN-HighD |
+|---------|----------------|-----------|-----------|
+| N=1000  |                |           |           |
+| N=2000  |                |           |           |
+| N=4000  |                |           |           |
+| N=8000  |                |           |           |
+| N=10000 |                |           |           |
+| N=12500 |                |           |           |
+| N=14944 |                |           |           |
+
 ## Análisis y discusión
 
 # Bibliografía
