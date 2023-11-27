@@ -123,10 +123,10 @@ Es un fenómeno que ocurre cuando se analizan datos de alta dimensión que afect
 
 ## Mitigar la maldición de la dimensionalidad
 - PCA: Reducción de dimensionalidad.
+![mitigate_curse_of_dimensionality](images/mitigate_curse_of_dimensionality.png)
 - Selección de características relevantes.
 - Usar un índice para alta dimensionalidad.
-
-![mitigate_curse_of_dimensionality](images/mitigate_curse_of_dimensionality.png)
+![faiss_step3](images/faiss_step3.png)
 
 # Frontend
 ## Diseño GUI
