@@ -123,10 +123,10 @@ Es un fenómeno que ocurre cuando se analizan datos de alta dimensión que afect
 
 ## Mitigar la maldición de la dimensionalidad
 - PCA: Reducción de dimensionalidad.
+![mitigate_curse_of_dimensionality](images/mitigate_curse_of_dimensionality.png)
 - Selección de características relevantes.
 - Usar un índice para alta dimensionalidad.
-
-![mitigate_curse_of_dimensionality](images/mitigate_curse_of_dimensionality.png)
+![faiss_step3](images/faiss_step3.png)
 
 # Frontend
 ## Diseño GUI
@@ -172,6 +172,28 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 
 # Experimentación
 ## Resultados experimentales
+### Experimento 1
+|         | MyIndex | PostgreSQL |
+|---------|----------------|-----------|
+| N=1000  |                |           |
+| N=2000  |                |           |
+| N=4000  |                |           |
+| N=8000  |                |           |
+| N=10000 |                |           |
+| N=14000 |                |           |
+| N=18000 |                |           |
+
+### Experimento 2
+|         | KNN-Sequential (ms) | KNN-RTree (ms) | KNN-HighD (ms) |
+|---------|---------------------|----------------|----------------|
+| N=1000  | 6.3                 | 4.1            | 3.6            |
+| N=2000  | 13.42               | 7.532          | 0.4            |
+| N=4000  | 24.314              | 10.433         | 0.42           |
+| N=8000  | 49.3                | 16.561         | 0.59           |
+| N=10000 | 58.93               | 26.441         | 0.641          |
+| N=12500 | 76.924              | 32.4           | 0.81           |
+| N=14944 | 90.1                | 37.001         | 0.9            |
+
 ## Análisis y discusión
 
 # Bibliografía
