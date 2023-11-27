@@ -31,6 +31,8 @@ A la hora de añadir un nuevo objeto al diccionario calculamos si el peso futuro
 Finalmente, cuando ya hallamos mandado a memoria secundaria a todos los bloques necesarios para representar los tokens de los documentos actuales, realizamos un merge de los bloques usando el método ```merge_and_save_blocks```, el cual extraerá los bloques iniciales uno a uno para no sobrepasar el límite de memoria e irá llenando un nuevo diccionario ordenado, creando un nuevo bloque final ```merged_block_n.json``` antes de sobrepasar el límite de memoria, para seguir después con el proceso.
 
 ## Ejecución óptima de consultas aplicando Similitud de Coseno
+A la hora de realizar queries, primero tokenizamos todos los elementos de la misma. Después, calculamos los valores necesarios para un correcto retrieval y aplicar la similitud de cosenos. Finalmente, buscamos entre los ```merged_block_n.json``` para calcular los documentos más similares a mostrar. 
+
 ## Construcción del índice invertido en PostgreSQL/MongoDB
 
 # Backend: Índice Multidimensional
