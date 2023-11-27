@@ -35,7 +35,7 @@ Finalmente, cuando ya hallamos mandado a memoria secundaria a todos los bloques 
 ## Ejecución óptima de consultas aplicando Similitud de Coseno
 A la hora de realizar queries, primero tokenizamos todos los elementos de la misma. Después, calculamos los valores necesarios para un correcto retrieval y aplicar la similitud de cosenos. Finalmente, buscamos entre los ```merged_block_n.json``` para calcular los documentos más similares a mostrar. 
 
-## Construcción del índice invertido en PostgreSQL/MongoDB
+## Construcción del índice invertido en PostgreSQL
 
 # Backend: Índice Multidimensional
 ## Técnica de transformación de audio a vector característico usada
@@ -187,6 +187,8 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 | N=14000 |4882.048        |18326.689        |
 | N=18000 |6396.227        |25449.169        |
 
+![experimento1](images/experimento1.png)
+
 ### Experimento 2
 |         | KNN-Sequential (ms) | KNN-RTree (ms) | KNN-HighD (ms) |
 |---------|---------------------|----------------|----------------|
@@ -198,7 +200,20 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 | N=12500 | 76.924              | 32.4           | 0.81           |
 | N=14944 | 90.1                | 37.001         | 0.9            |
 
-## Análisis y discusión
+![experimento2](images/experimento2.png)
+
+### Análisis y discusión
+#### Experimento 1
+Los resultados del Experimento 1 muestran una tendencia clara en la que nuestro índice personalizado, MyIndex, supera en eficiencia al de PostgreSQL en términos de tiempo de respuesta.
+
+Sin embargo, es crucial considerar que esta diferencia de rendimiento podría estar influenciada por las distintas capacidades de las máquinas donde se realizaron las pruebas. Si bien MyIndex muestra un mejor rendimiento, parte de esta ventaja podría atribuirse a un hardware más potente o a configuraciones específicas del entorno de prueba que favorecen nuestro sistema. Por lo tanto, aunque los resultados son prometedores, es importante tomar en cuenta este factor al evaluar la eficiencia relativa de ambos sistemas.
+
+#### Experimento 2
+Se comparan tres variantes del algoritmo KNN: Secuencial, RTree y HighD (Faiss Inverted Index File Flat). Los resultados experimentales revelan una clara ventaja del índice KNN-HighD en términos de velocidad.
+
+Esta superioridad puede atribuirse a la eficacia con la que el índice KNN-HighD gestiona datos en alta dimensión, aprovechando técnicas de clustering y listas invertidas para optimizar la búsqueda. En contraste, el método KNN-Sequential, aunque eficaz en muestras más pequeñas, muestra un aumento significativo en el tiempo de respuesta a medida que el tamaño del conjunto de datos crece. El método RTree, si bien supera al Secuencial en eficiencia, no logra igualar la rapidez y eficacia del HighD por la maldición de la dimensionalidad.
+
+La elección de Faiss para el índice HighD resultó ser una decisión acertada para la interfaz gráfica de la aplicación ya que es el que tiene mayor rapidez y precisión para muchos datos y con altas dimensiones.
 
 # Bibliografía
 - Facebookresearch. (s. f.). Getting started. GitHub. https://github.com/facebookresearch/faiss/wiki/Getting-started
