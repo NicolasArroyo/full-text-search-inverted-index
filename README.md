@@ -39,18 +39,57 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 ## Técnica de transformación de audio a vector característico usada
 ## Técnica de indexación de las librerías utilizadas
 ### Rtree
+
 ### Faiss
-Usamos el ```Inverted Index File Flat``` el cual consiste en agrupar en k clusters los vectores característicos mediante los diagramas de Voronoi.
-Pasos de construcción:
+Usamos el ```Inverted Index File Flat``` el cual consiste en agrupar en n clusters los vectores característicos mediante los diagramas de Voronoi.
+
+Parámetros:
+- Quantizer: Objeto que divide el espacio en regiones más pequeñas.
+- d: Dimensión de los vectores.
+- nlists: Cantidad de clusters.
+- metric: Metrica usada para la distancia.
+- nprobe: Cantidad extra de clusters en los que buscar en una consulta.
+
+```python
+dimension = vectors.shape[1]
+nlist = n
+quantizer = faiss.IndexFlatIP(dimension)
+index = faiss.IndexIVFFlat(quantizer, dimension, nlist)
+index.nprobe = nprobe
+```
+
+**Pasos de construcción:**
 1. Datos: Colocar los vectores normalizados como puntos en el espacio.
-2. Selección de centroides: Se eligen k centroides, que son puntos, al azar o mediante el algoritmo k-means.
+2. Selección de centroides: Se eligen n centroides (parámetro ```nlist```), que son puntos, al azar o mediante el algoritmo n-means (k-means).
+
+![faiss_step2](images/faiss_step2.png)
+
 3. Clustering: Cada punto se asigna al centroide/cluster más cercano mediante el cálculo de la distancia.
+
+![faiss_step3](images/faiss_step3.png)
+
 4. Creación de listas invertidas: Por cada cluster se crea una lista invertida de los puntos que pertenecen a él.
+
+![faiss_step4](images/faiss_step4.png)
 
 ## Búsquedas
 ### Sequential
+#### KNN-heap
+En primer lugar, se itera punto por punto de la colección y se calcula su distancia con el query vector. Después, se crea un heap con la finalidad de mantener siempre los k más cercanos. Finalmente, una vez recorrida toda la colección se ordena el heap y se retorna como una lista.
+
+![knn_sequential_search](images/knn_sequential_search.png)
+
+#### Por rango
+En primer lugar, se itera punto por punto de la colección y se calcula su distancia con el query vector. Si la distancia de este punto es menor al radio r dado entonces se agrega al resultado final.
+
+![sequential_range_search](images/sequential_range_search.png)
+
 ### Rtree
 ### Faiss
+1. Cluster más cercano: Elegir el cluster a menor distancia del query vector.
+2. Búsqueda en el cluster más cercano: Se busca los k vecinos más cercanos dentro de la lista invertida del cluster más cercano.
+3. Problema del borde: Si el query vector cerca de otros clusters pueden existir puntos más cercanos a él en esos otros clusters. Por ello, se busca en cierta cantidad de clusters vecinos además del más cercano (parámetro ```nprobe```).
+
 ## Maldición de la dimensionalidad
 ## Mitigar la maldición de la dimensionalidad
 
