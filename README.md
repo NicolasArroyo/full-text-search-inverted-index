@@ -175,13 +175,15 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 ### Experimento 1
 |         | MyIndex | PostgreSQL |
 |---------|----------------|-----------|
-| N=1000  |                |           |
-| N=2000  |                |           |
-| N=4000  |                |           |
-| N=8000  |                |           |
-| N=10000 |                |           |
-| N=14000 |                |           |
-| N=18000 |                |           |
+| N=1000  |                |974.134    |
+| N=2000  |                |2242.100   |
+| N=4000  |                |4498.170   |
+| N=8000  |                |9938.721   |
+| N=10000 |                |11389.978  |
+| N=14000 |                |18326.689  |
+| N=18000 |                |25449.169  |
+
+tiempos en ms
 
 ### Experimento 2
 |         | KNN-Sequential (ms) | KNN-RTree (ms) | KNN-HighD (ms) |
