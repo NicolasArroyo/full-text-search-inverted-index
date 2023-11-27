@@ -117,7 +117,16 @@ El radio de búsqueda se calcula a partir del percentil escogido, reflejando el 
 ![faiss_step4](images/faiss_step4.png)
 
 ## Maldición de la dimensionalidad
+Es un fenómeno que ocurre cuando se analizan datos de alta dimensión que afecta a la búsqueda eficiente de los datos. A medida que aumenta la dimensionalidad la separación y volumen de los datos crece tan rápido que los puntos cercanos parecen distantes provocando que las búsquedas sean ineficientes y/o poco precisas.
+
+![curse_of_dimensionality](images/curse_of_dimensionality.png)
+
 ## Mitigar la maldición de la dimensionalidad
+- PCA: Reducción de dimensionalidad.
+- Selección de características relevantes.
+- Usar un índice para alta dimensionalidad.
+
+![mitigate_curse_of_dimensionality](images/mitigate_curse_of_dimensionality.png)
 
 # Frontend
 ## Diseño GUI
@@ -137,3 +146,9 @@ curl -X POST "https://accounts.spotify.com/api/token" \
 # Experimentación
 ## Resultados experimentales
 ## Análisis y discusión
+
+# Bibliografía
+- Facebookresearch. (s. f.). Getting started. GitHub. https://github.com/facebookresearch/faiss/wiki/Getting-started
+- Nearest Neighbor indexes for similarity search. (s. f.). Pinecone. https://www.pinecone.io/learn/series/faiss/vector-indexes/
+- Berchtold, S., Keim, D. A., & Kriegel, H.-P. (s/f). The X-tree: An index structure for high-dimensional data. Dbvis.de. Recuperado el 27 de noviembre de 2023, de https://bib.dbvis.de/uploadedFiles/190.pdf
+- Figure 1 The curse of dimensionality (A) 11 objects in one unit bin (B). (s. f.). ResearchGate. https://www.researchgate.net/figure/The-curse-of-dimensionality-a-11-objects-in-one-unit-bin-b-6-objects-in-one-unit-bin_fig1_264823819
