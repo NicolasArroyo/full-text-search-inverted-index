@@ -250,6 +250,8 @@ Esta superioridad puede atribuirse a la eficacia con la que el índice KNN-HighD
 La elección de Faiss para el índice HighD resultó ser una decisión acertada para la interfaz gráfica de la aplicación ya que es el que tiene mayor rapidez y precisión para muchos datos y con altas dimensiones.
 
 # Bibliografía
+- An introduction to inverted index. (s/f). Slideshare.net. Recuperado el 27 de noviembre de 2023, de https://es.slideshare.net/weedge/an-introduction-to-inverted-index
+- Single-pass in-memory indexing. (s/f). Stanford.edu. Recuperado el 27 de noviembre de 2023, de https://nlp.stanford.edu/IR-book/html/htmledition/single-pass-in-memory-indexing-1.html
 - Facebookresearch. (s. f.). Getting started. GitHub. https://github.com/facebookresearch/faiss/wiki/Getting-started
 - Nearest Neighbor indexes for similarity search. (s. f.). Pinecone. https://www.pinecone.io/learn/series/faiss/vector-indexes/
 - Berchtold, S., Keim, D. A., & Kriegel, H.-P. (s/f). The X-tree: An index structure for high-dimensional data. Dbvis.de. Recuperado el 27 de noviembre de 2023, de https://bib.dbvis.de/uploadedFiles/190.pdf
