@@ -131,16 +131,43 @@ Es un fenómeno que ocurre cuando se analizan datos de alta dimensión que afect
 # Frontend
 ## Diseño GUI
 ### Manual de uso
-Primero se debe obtener una Spotify API Key. Para esto se debe hacer la siguiente request con la información correspondiente.
+1. Primero se debe obtener una Spotify API Key. Para esto se debe hacer la siguiente request con la información correspondiente requerida, que se saca de la web para desarrolladores de Spotify.
 
 ```zsh
 curl -X POST "https://accounts.spotify.com/api/token" \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "grant_type=client_credentials&client_id=your-client-id&client_secret=your-client-secret"
-
 ```
 
+2. Luego se debe ingresar a la carpeta del backend, instalar las dependencias del `requirements.txt` y correr el siguiente comando:
+```zsh
+uvicorn main:app --reload
+```
+Este iniciará la API que se conectará con el front end.
+3. Luego también instalar las dependencias del `requirements.txt` y correr el siguiente comando en la carpeta del backend del inidice multidimensional:
+```zsh
+uvicorn main:app --reload -p 8080
+```
+4.- Finalmente para iniciar la web en la que se mostrará toda la GUI, primero ubicarse en la carpeta de frontend y ejecutar:
+```zsh
+npm run dev
+```
+Finalmente dirigirse al link que aparecerá en la terminal.
+
 ### Screenshots
+
+1. Cuando entramos en la app sin hacer alguna busqueda.
+
+![gui1](./images/gui1.png)
+
+2. Cuando se hace una busqueda textual.
+
+![gui1](./images/gui2.png)
+
+3. Cuando buscamos los 5 mas cercanos usando el indice multidimensional.
+
+![gui1](./images/gui3.png)
+
 ## Análisis comparativo visual con otras implementaciones
 
 # Experimentación
