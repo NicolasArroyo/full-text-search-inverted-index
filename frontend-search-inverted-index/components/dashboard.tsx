@@ -28,7 +28,7 @@ type KnnRow = {
     spotify_link: string
 }
 
-const SPOTIFY_TOKEN = "BQCBGZuu7PtyIRYxnZGanryZABvhqyeEpsbQyZ8-bpzR0qAqVSRsVpV_IgPhOEk-g-9TICJbtrzVcFHCQO-OBjjxdGzxtQ1Dw-_DMp-2MivIVPqf898"
+const SPOTIFY_TOKEN = "BQBtM7RAJqN3w26nKcXVRYvT13fephNzpXH69iNaVuSAr_JFsx_6GhN3kTTRbdHovsgGnu1VK5y8ICvr9TMZuFjpQveooP5fEjqtm2KORDWAUHCZQ10"
 
 export default function Dashboard({
     query,
