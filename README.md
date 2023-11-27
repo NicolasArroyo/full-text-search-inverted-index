@@ -40,6 +40,13 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 ## Técnica de indexación de las librerías utilizadas
 ### Rtree
 ### Faiss
+Usamos el ```Inverted Index File Flat``` el cual consiste en agrupar en k clusters los vectores característicos mediante los diagramas de Voronoi.
+Pasos de construcción:
+1. Datos: Colocar los vectores normalizados como puntos en el espacio.
+2. Selección de centroides: Se eligen k centroides, que son puntos, al azar o mediante el algoritmo k-means.
+3. Clustering: Cada punto se asigna al centroide/cluster más cercano mediante el cálculo de la distancia.
+4. Creación de listas invertidas: Por cada cluster se crea una lista invertida de los puntos que pertenecen a él.
+
 ## Búsquedas
 ### Sequential
 ### Rtree
