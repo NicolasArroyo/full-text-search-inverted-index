@@ -164,12 +164,15 @@ Finalmente dirigirse al link que aparecerá en la terminal.
 ![gui1](./images/gui1.png)
 
 2. Cuando se hace una busqueda textual.
+MyIndex:
+![gui2_1](./images/gui2_1.png)
 
-![gui1](./images/gui2.png)
+Postgres:
+![gui2_2](./images/gui2_2.png)
 
-3. Cuando buscamos los 5 mas cercanos usando el indice multidimensional.
+4. Cuando buscamos los 5 mas cercanos usando el indice multidimensional.
 
-![gui1](./images/gui3.png)
+![gui3](./images/gui3.png)
 
 # Experimentación
 ## Resultados experimentales
