@@ -2,12 +2,14 @@
 
 # Integrantes
 
-| <a href="https://github.com/jmac-94" target="_blank">**Josué Mauricio Arriaga Colchado**</a> | <a href="https://github.com/NicolasArroyo" target="_blank">**Nicolas Mateo Arroyo Chávez**</a> | <a href="https://github.com/Gabrieleeh32159" target="_blank">**Gabriel Espinoza**</a> | <a href="https://github.com/Gabrieleeh32159" target="_blank">**Max Antúnez**</a> |
+| <a href="https://github.com/jmac-94" target="_blank">**Josué Mauricio Arriaga Colchado**</a> | <a href="https://github.com/NicolasArroyo" target="_blank">**Nicolas Mateo Arroyo Chávez**</a> | <a href="https://github.com/Gabrieleeh32159" target="_blank">**Gabriel Espinoza**</a> | <a href="https://github.com/Maxantunez404" target="_blank">**Max Antúnez**</a> |
 | :----------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: |
-| <img src="https://avatars.githubusercontent.com/u/83974555?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/83975293?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/85197211?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/85197211?v=4" alt="drawing" width="200"/> |
+| <img src="https://avatars.githubusercontent.com/u/83974555?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/83975293?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/85197211?v=4" alt="drawing" width="200"/> | <img src="https://avatars.githubusercontent.com/u/83974281?v=4" alt="drawing" width="200"/> |
 
 # Introducción
 ## Objetivo
+El objetivo de este proyecto es diseñar e implementar sistemas de indexación eficientes para datos textuales y audios wav relacionados a canciones de Spotify. Buscamos optimizar las consultas y la recuperación de información, superar los retos de la alta dimensionalidad en los datos de audio, y ofrecer una interfaz de usuario amigable. Nuestro enfoque se centra en buscar la precisión y rapidez de las búsquedas, la comparación de diferentes métodos de indexación, y la evaluación de su eficacia mediante análisis comparativos y experimentación.
+
 ## Dominio de datos
 Para la primera parte del proyecto nos hemos basado en la indexación de canciones de Spotify, de modo que guardamos el nombre de la canción, su autor/a y la letra completa.
 
