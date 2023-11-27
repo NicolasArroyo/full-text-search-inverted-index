@@ -103,6 +103,9 @@ El radio para la consulta se selecciona mediante el análisis de la distribució
 El radio de búsqueda se calcula a partir del percentil escogido, reflejando el porcentaje de puntos que deseamos incluir alrededor del punto de consulta. Esto permite que el radio se ajuste a la densidad de nuestro conjunto de datos.
 
 ### Rtree
+1. Descender en el árbol: Se selecciona el MBR más cercano al punto de la query y al entrar a ese MBR se repite el proceso hasta llegar a un nodo hoja.
+2. Verificar hojas: Se compara la query con los puntos en la hoja y se buscan los k más cercanos.
+3. Fin de la búsqueda: La búsqueda termina cuando no existan otros puntos más cercanos en otros MBRs.
 
 ![rtree_search](images/rtree_search.png)
 
