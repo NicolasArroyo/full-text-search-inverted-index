@@ -37,6 +37,8 @@ A la hora de realizar queries, primero tokenizamos todos los elementos de la mis
 
 # Backend: Índice Multidimensional
 ## Técnica de transformación de audio a vector característico usada
+Para poder manejar los audios .wav de una mejor manera, hemos decidido convertirlos a vectores característicos. En primer lugar, se ha calculado los Mel-frequency cepstral coefficients (MFCCs) para manejar las características más importantes del audio, ignorando a factores externos como puede ser el ruido de fondo o el volumen del audio, así asemejándose a cómo un humano escucha con normalidad. Después, aplicamos una normalización a cada uno de los arrays que representan los MFCCs, así teniendo en cada uno un total de 80 elementos. Esto asegura que nuestras librerías puedan trabajar con ellos, pues necesitan tener las mismas dimensiones cada uno de los elementos.
+
 ## Técnica de indexación de las librerías utilizadas
 ### Rtree
 El ```rtree``` es una estructura de datos similar al BTree, pero para más de una dimensión. Es usado ampliamente por su eficiencia en búsquedas espaciales, manejo de datos multidimensionales y escalamiento con gran cantidad de datos.
