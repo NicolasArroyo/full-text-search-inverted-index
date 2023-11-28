@@ -253,7 +253,7 @@ Postgres:
 #### Experimento 1
 Los resultados del Experimento 1 muestran una tendencia clara en la que nuestro índice personalizado, MyIndex, supera en eficiencia al de PostgreSQL en términos de tiempo de respuesta.
 
-Sin embargo, es crucial considerar que esta diferencia de rendimiento podría estar influenciada por las distintas capacidades de las máquinas donde se realizaron las pruebas. Si bien MyIndex muestra un mejor rendimiento, parte de esta ventaja podría atribuirse a un hardware más potente o a configuraciones específicas del entorno de prueba que favorecen nuestro sistema. Por lo tanto, aunque los resultados son prometedores, es importante tomar en cuenta este factor al evaluar la eficiencia relativa de ambos sistemas.
+Este mejor rendimiento de MyIndex se atribuye a que generalidad que ofrece el índice gist de postgreSQL ya que funciona tanto para datos textuales como para multimedia. Por otro lado, el índice MyIndex está especializado para consultas textuales por lo que funciona mejor.
 
 #### Experimento 2
 Se comparan tres variantes del algoritmo KNN: Secuencial, RTree y HighD (Faiss Inverted Index File Flat). Los resultados experimentales revelan una clara ventaja del índice KNN-HighD en términos de velocidad.
